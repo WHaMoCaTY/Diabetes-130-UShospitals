@@ -29,7 +29,7 @@
 	    miglitol :  -0.7928093545529517
 	    ```
 	
-	![](/home/jinwei/Documents/Git/Diabetes-130-UShospitals/Linear Regression and Neural Nets/LR_class1.jpg)
+	![](LR_class1.jpg)
 	
 	   2. class:  readmitted < 30
 	
@@ -43,7 +43,7 @@
 	      number_diagnoses :  0.8238872938405993
 	      ```
 
-![](/home/jinwei/Documents/Git/Diabetes-130-UShospitals/Linear Regression and Neural Nets/LR_class2.jpg)
+![](LR_class2.jpg)
 
   3. class: readmitted > 30
 
@@ -57,7 +57,7 @@
      miglitol :  0.9852093550584486
      ```
 
-![](/home/jinwei/Documents/Git/Diabetes-130-UShospitals/Linear Regression and Neural Nets/LR_class3.jpg)
+![](LR_class3.jpg)
 
 
 
@@ -80,9 +80,9 @@ Result
 
 2. Loss during training
 
-   ![](/home/jinwei/Documents/Git/Diabetes-130-UShospitals/Linear Regression and Neural Nets/loss.jpg)
+   ![](loss.jpg)
 
 3. Test accuracy during trianing
 
-   ![](/home/jinwei/Documents/Git/Diabetes-130-UShospitals/Linear Regression and Neural Nets/acc.jpg)
+   ![](acc.jpg)
 
