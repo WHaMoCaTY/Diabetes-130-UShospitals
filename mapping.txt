@@ -1,35 +1,10 @@
-race
-?: 0
-AfricanAmerican: 1
-Asian: 2
-Caucasian: 3
-Hispanic: 4
-Other: 5
+one-hot encode: 
+race, gender, change, diabetesMed, diagnose1, diagnose2, diagnose3
 
-gender
-Female: 2
-Male: 1
-Unknown/Invalid: 0
+nuemric encode: 
+age, max_glu_serum, A1Cresult, readmitted, metformin, repaglinide, nateglinide, chlorpropamide, glimepiride, acetohexamide, glipizide, glyburide, tolbutamide, pioglitazone, rosiglitazone, acarbose, miglitol, troglitazone, tolazamide, examide, citoglipton, insulin, glyburide-metformin, glipizide-metformin, glimepiride-pioglitazone, metformin-rosiglitazone, metformin-pioglitazone
 
-payer_code
-?: 0
-BC: 1
-CH: 2
-CM: 3
-CP: 4
-DM: 5
-FR: 6
-HM: 7
-MC: 8
-MD: 9
-MP: 10
-OG: 11
-OT: 12
-PO: 13
-SI: 14
-SP: 15
-UN: 16
-WC: 17
+mapping of numeric encoding is like below:
 
 age
 [0-10): 1
@@ -43,18 +18,6 @@ age
 [80-90): 9
 [90-100): 10
 
-weight
-?: 0
-[0-25): 1
-[100-125): 2
-[125-150): 3
-[150-175): 4
-[175-200): 5
-[25-50): 6
-[50-75): 7
-[75-100): 8
->200: 9
-
 max_glu_serum
 None: 0
 Norm: 1
@@ -66,14 +29,6 @@ None: 0
 Norm: 1
 >7: 2
 >8: 3
-
-change
-No: 1
-Ch: 2
-
-diabetesMed
-No: 1
-Yes: 2
 
 readmitted
 NO: 1
