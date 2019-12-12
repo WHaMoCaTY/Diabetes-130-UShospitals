@@ -1,0 +1,271 @@
+---
+title: "CS273Project"
+output: html_document
+root.dir: "~/Google Drive/uci/2019Fall/CS273A/Project/dataset_diabetes"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(foreign)
+library(dplyr)
+library(tidyr)
+#library(lattice)
+library(ggplot2)
+library(tidyverse)
+library(lme4)
+library(merTools)
+#library(geepack)
+#library(emdbook)
+library(knitr)
+library(plotROC)
+library(stringr)
+library(factoextra)
+library(FactoMineR)
+#for multinomial regression
+library(nnet)
+library(dummies)
+library(glmnet)
+#source("Allfunctions.R")
+
+#load in balloonPlot
+```
+Diabetes or not relating to hospital readmission rate, first convert three diagnoses into coding of disease
+```{r}
+#read in data
+diab = read.csv("~/Google Drive/uci/2019Fall/CS273A/Project/dataset_diabetes/diabetic_data.csv",header= T)
+#ID = read.csv("~/Google Drive/uci/2019Fall/CS273A/Project/dataset_diabetes/IDs_mapping.csv",header = T)
+
+#diab_JW = read.table("~/Google #Drive/uci/2019Fall/CS273A/Project/dataset_diabetes/hospital0.2.txt",header = T,fill = T)
+diab2 = diab 
+```
+mutate disease into categories 
+convert numeric into numeric
+```{r}
+diab2 = as.data.frame(apply(diab2,2,function(x) na_if(x, "?")))
+rm(diab_JW)
+#tmp  = diab2[,1:18] %>% select_if(~ nlevels(.) > 20 ) %>% mutate_if(is.factor, as.numeric)
+#don't know how to put it back so going to do that one by one 
+
+tmp = diab2 %>% mutate( encounter_id = as.numeric(encounter_id),patient_nbr = as.numeric(patient_nbr),time_in_hospital = as.numeric(time_in_hospital),num_lab_procedures = as.numeric(num_lab_procedures),num_procedures = as.numeric(num_procedures),num_medications = as.numeric(num_medications),number_outpatient = as.numeric(number_outpatient),number_emergency = as.numeric(number_emergency),number_inpatient = as.numeric(number_inpatient),number_diagnoses = as.numeric(number_diagnoses))
+
+drop_cols = c("weight","payer_code","examide","citoglipton","medical_specialty")
+tmp2 = tmp %>% dplyr::select(-one_of(drop_cols))
+tmp3 = tmp2 %>% mutate(diag1 = as.character(diag_1),diag2 = as.character(diag_2),diag3 = as.character(diag_3))
+```
+check diagnosis and convert to dianose names 
+
+```{r}
+fit = lm(readmitted ~.,data = tmp2[,3:ncol(tmp2)],na.action = NULL )
+
+```
+
+
+```{r}
+#this is for finding out what's in the diag
+#grep("9999",tmp3$diag1)
+
+#because in diagnoses there's letter, replace letter with 9999 for later mapping
+tmp3$diag1 = as.numeric(gsub(x= as.character(tmp3$diag_1), pattern = "[A-z]\\d+", replacement = "9999"))
+tmp3$diag2 = as.numeric(gsub(x= as.character(tmp3$diag_2), pattern = "[A-z]\\d+", replacement = "9999"))
+tmp3$diag3 = as.numeric(gsub(x= as.character(tmp3$diag_3), pattern = "[A-z]\\d+", replacement = "9999"))
+
+tmp3 = tmp3 %>% mutate(diagnose1 = case_when( (diag1 >= 390 & diag1<= 459) | diag1 ==785 ~ "Circulatory", (diag1 >= 460 & diag1<= 519) | diag1 ==786 ~ "Respiratory",(diag1 >= 520 & diag1<= 579) | diag1 ==787 ~ "Digestive", (diag1 > 249.00 & diag1 <251.00) ~ "Diabetes", (diag1 >= 800 & diag1<= 999) ~ "Injury",(diag1 >= 710 & diag1 <= 739) ~ "Musculoskeletal",(diag1 >= 580 & diag1<= 629) | diag1 ==788 ~ "Genitourinary",(diag1 >= 140 & diag1<= 239) | diag1 ==780 | diag1 ==781 |diag1 ==784 | (diag1 >= 790 & diag1 <= 799) | ( (diag1 >= 240 & diag1<= 279) & !(diag1 > 249.00 & diag1 <251.00)) | (diag1 >= 680 & diag1 <= 709)| diag1 ==782  |(diag1 >= 001 & diag1<=139)  ~ "Neoplasms",(diag1 >= 290 & diag1 <= 319)| (diag1 == 9999) | (diag1 >= 280 & diag1 <= 289) | (diag1 >= 320 & diag1 <= 359)| (diag1 >= 630 & diag1 <= 679)| (diag1 >= 360 & diag1 <= 389)|  (diag1 >= 740 & diag1 <= 759) | diag1 == 783 | diag1 == 789~ "Other")) %>%
+  mutate(diagnose2 = case_when( (diag2 >= 390 & diag2<= 459) | diag2 ==785 ~ "Circulatory", (diag2 >= 460 & diag2<= 519) | diag2 ==786 ~ "Respiratory",(diag2 >= 520 & diag2<= 579) | diag2 ==787 ~ "Digestive", (diag2 > 249.00 & diag2 <251.00) ~ "Diabetes", (diag2 >= 800 & diag2<= 999) ~ "Injury",(diag2 >= 710 & diag2 <= 739) ~ "Musculoskeletal",(diag2 >= 580 & diag2<= 629) | diag2 ==788 ~ "Genitourinary",(diag2 >= 140 & diag2<= 239) | diag2 ==780 | diag2 ==781 |diag2 ==784 | (diag2 >= 790 & diag2 <= 799) | ( (diag2 >= 240 & diag2<= 279) & !(diag2 > 249.00 & diag2 <251.00)) | (diag2 >= 680 & diag2 <= 709)| diag2 ==782  |(diag2 >= 001 & diag2<=139)  ~ "Neoplasms",(diag2 >= 290 & diag2 <= 319)| (diag2 == 9999)| (diag2 >= 280 & diag2 <= 289) | (diag2 >= 320 & diag2 <= 359)| (diag2 >= 630 & diag2 <= 679)| (diag2 >= 360 & diag2 <= 389)|  (diag2 >= 740 & diag2 <= 759) | diag2 == 783 | diag2 == 789 ~ "Other")) %>% 
+  mutate(diagnose3 = case_when( (diag3 >= 390 & diag3<= 459) | diag3 ==785 ~ "Circulatory", (diag3 >= 460 & diag3<= 519) | diag3 ==786 ~ "Respiratory",(diag3 >= 520 & diag3<= 579) | diag3 ==787 ~ "Digestive", (diag3 > 249.00 & diag3 <251.00) ~ "Diabetes", (diag3 >= 800 & diag3<= 999) ~ "Injury",(diag3 >= 710 & diag3 <= 739) ~ "Musculoskeletal",(diag3 >= 580 & diag3<= 629) | diag3 ==788 ~ "Genitourinary",(diag3 >= 140 & diag3<= 239) | diag3 ==780 | diag3 ==781 |diag3 ==784 | (diag3 >= 790 & diag3 <= 799) | ( (diag3 >= 240 & diag3<= 279) & !(diag3 > 249.00 & diag3 <251.00)) | (diag3 >= 680 & diag3 <= 709)| diag3 ==782  |(diag3 >= 001 & diag3<=139)  ~ "Neoplasms",(diag3 >= 290 & diag3 <= 319)| (diag3 == 9999)| (diag3 >= 280 & diag3 <= 289) | (diag3 >= 320 & diag3 <= 359)| (diag3 >= 630 & diag3 <= 679)| (diag3 >= 360 & diag3 <= 389)|  (diag3 >= 740 & diag3 <= 759) | diag3 == 783 | diag3 == 789~ "Other"))
+
+#choose first visit 
+#only keeping first visit 
+tmp4 = as.data.frame(tmp3 %>% group_by(patient_nbr,.drop=T) %>%
+  arrange(encounter_id) %>%
+  filter(row_number()==1),.preserve = F)
+```
+1. save clean output as character
+2. save the boolean vector matrix for python input 
+```{r}
+```
+load in priyam's file and see if I can work on it, it works. not as .txt but as .csv, yes I can. 
+
+Only choose subsets to do linear regression on, and also change diagnoses to. 
+```{r}
+drop_cols = c("glimepiride.pioglitazone")
+datain = tmp4[,-c(16,17,18,46,47,48)] %>% dplyr::select(-one_of(drop_cols))
+```
+Analysis starts from here 
+data called tmp4 
+there are factor levels with 0 in one level, possibly due to choosing only first visits, needs to delte them Checked and it's true. 
+```{r}
+
+drop_cols = c("diag_1","diag_2","diag_3","diag1","diag2","diag3","glimepiride.pioglitazone","acetohexamide","metformin.pioglitazone","metformin.rosiglitazone")
+tmp4 = tmp4 %>% dplyr::select(-one_of(drop_cols)) %>% 
+  mutate_if(is.factor,droplevels)  %>%
+  mutate(diagnose1 = as.factor(diagnose1),diagnose2 = as.factor(diagnose2),diagnose3 = as.factor(diagnose3))
+
+#write_csv(tmp4 %>% mutate_if(is.factor,as.character),'Diabetes_clean.csv')
+
+#doesn't work 
+#datain %>% select_if(is.factor) %>% select_if(. %in% (levels(.)[summary(.) %in% 1])) %>% glimpse
+# ind = rep(0,ncol(datain))
+# for (i in 1:ncol(datain)) {
+#    if (is.factor(datain[,i])) {
+#      print(paste("here",as.character(i)))
+#     ind[i] = sum(datain[,i] %in% levels(datain[,i])[summary(datain[,i]) %in% 1])
+#     print(as.character(summary(datain[,i]) %in% 1))
+#   }
+# }
+#doen checking, no more factor level less than 1 don't know why. gave up today 
+
+datain = tmp4 %>% 
+    dplyr::filter(!(miglitol %in% (levels(miglitol)[summary(miglitol) %in% 1]))) %>% 
+    dplyr::filter(!(chlorpropamide %in% (levels(chlorpropamide)[summary(chlorpropamide) %in% 1]))) %>%
+    dplyr::filter(!(discharge_disposition_id %in% (levels(discharge_disposition_id)[summary(discharge_disposition_id) %in% 1]))) %>%
+    dplyr::filter(!(admission_source_id %in% (levels(admission_source_id)[summary(admission_source_id) %in% 1]))) %>% 
+    mutate_at(c("miglitol","chlorpropamide","admission_source_id","discharge_disposition_id"),droplevels)
+datain = na.omit(datain) %>% 
+  dplyr::filter(!(gender %in% (levels(gender)[summary(gender) %in% 1]))) %>% 
+  mutate_at(c("gender"),droplevels) 
+load("FinalData.Rdata")
+#load in datain 
+
+#doesn't support filter for summary for the column instead of column names 
+#dplyr::filter_at(vars(any(summary(.) %in% 1)),!(. %in% (levels(.)[summary(.) %in% 1])))
+```
+###################### Analysis starts from here 
+PCA analysis 
+```{r}
+#convert everything except for response variable into dummy variable for easier time of everything
+#load in txt 
+data2=read_csv("hospital_ready.csv")
+
+#merge readmitted >30 and <30 into yes or no 
+datain= datain %>% mutate(readmit2= case_when(readmitted == "NO" ~"NO", readmitted == ">30"| readmitted == "<30" ~ "YES")) %>% 
+  mutate(readmit2 = as.factor(readmit2)) %>% 
+  mutate(discharge_disposition_id= as.numeric(discharge_disposition_id)) %>% 
+  mutate(admission_source_id=as.numeric(admission_source_id),admission_type_id = as.numeric(admission_type_id)) %>% 
+  mutate(age = as.numeric(age))
+datain2 = dummy.data.frame(datain,names = c("race","diagnose1","diagnose2","diagnose3","change","diagbetesMed","gender"))
+datain2 = datain2 %>% mutate_if(is.factor,as.numeric)
+
+dataplot = datain %>% mutate(discharge_disposition_id = as.numeric(discharge_disposition_id))
+
+#this replicate Jinwei's remapping 
+save(datain2,file="FinalDataDummy.RData")
+
+#these two libraries for plotting PCA
+data2=read_csv("hospital_ready.csv")
+
+outpca = prcomp(datain2 %>% dplyr::select(-readmit2,-readmitted,-encounter_id,-patient_nbr),scale.=T)
+outpca = prcomp(data2[,-ncol(data2)],scale.=T)
+old.par <- par(mar = c(0, 0, 0, 0))
+par(old.par)
+fviz_pca_var(outpca,
+             col.var = "contrib", # Color by contributions to the PC
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = TRUE     # Avoid text overlapping
+             )
+# res = MFA(tmp4[,-c(1,2,39)], group=c(3,3,3,10,9,3), type=c("n",rep("s",5)), ncp=5, name.group=c("ind","hospital","visual","odor.after.shaking", "taste","overall","diagnoses"), num.group.sup=c(1,6))
+```
+########Outliers and plotting 
+Now using only complete dataset and deletes variable payer_code and because there is 53% missing.  
+```{r}
+#simple linear regression 
+#see if it will run after deleting those NA rows, possibly due to less factor levels after removing NAs
+#delete medical specialty and payer code because too much NA causing trouble for other variables to miss factors levels as well
+datain[,-c(1,2)] %>%
+  keep(is.numeric) %>%                     # Keep only numeric columns
+  gather() %>%                             # Convert to key-value pairs
+  ggplot(aes(value)) +                     # Plot the values
+    facet_wrap(~ key, scales = "free") +   # In separate panels
+    geom_density()  
+
+
+datain[,-c(1,2)] %>%
+  keep(is.factor) %>%                     # Keep only numeric columns
+  gather() %>%                             # Convert to key-value pairs
+  ggplot(aes(value)) +                     # Plot the values
+    facet_wrap(~ key, scales = "free") +   # In separate panels
+    geom_bar()  
+
+#try
+mtcars %>%
+  gather(-mpg, -hp, -cyl, key = "var", value = "value") %>% 
+  ggplot(aes(x = value, y = mpg, color = hp, shape = factor(cyl))) +
+    geom_point() +
+    facet_wrap(~ var, scales = "free") +
+    theme_bw()
+
+out2 = glm(as.factor(readmit2) ~ .,data = datain2[,-c(1,2,44)],family=binomial)
+out3 = multinom(as.factor(readmitted) ~ .,data = datain2[,-c(1,2,ncol(datain2))])
+out = lm(readmitted~ .,data = datain2[,-c(1,2,ncol(datain2))])
+#already have significant results 
+```
+########
+best subsets
+multinomial regression and best subsets 
+use AIC as a criterion 
+find best subsets 
+
+1. test if predicted needs to also be factor 
+```{r}
+dataUse =  datain2[,-c(1,2,ncol(datain2))]
+dataUse$readmitted = as.factor(dataUse$readmitted)
+
+#write code to divide data into 10 fold 
+#don't like it try the glm binary first 
+# alpha=0.7
+# d = sort(sample(nrow(dataUse), nrow(dataUse)*alpha))
+# train = datain[d,]
+# test = dataUse[-d,]
+# glm.fit=multinom(as.factor(readmitted)~., data=data2)
+# predict(glm.fit, test, "probs")
+# mean(as.character(predict (glm.fit, test[,-ncol(test)])) != as.character(test$cmc))
+
+#use logistic best subsets for speed and timing, use the same model for final prediction 
+#library(bestglm)
+dataUseglm = datain2[,-c(1,2,44)] %>% mutate(y=as.factor(readmit2)) %>% dplyr::select(-readmit2)
+#doest work
+#res.bestglm = bestglm(Xy = dataUseglm,family=binomial,IC="AIC",method="exhaustive")
+
+dataUseglm2 = datain2[,-c(1,2,44)] %>% dplyr::select(-raceOther,-genderMale,-changeNo, -diagnose1Respiratory,-diagnose2Respiratory,-diagnose3Respiratory)
+#outglmlsa = glm(as.factor(readmit2) ~ .,data = dataUseglm2,family=binomial)
+#lsa(outglmlsa) #does give meaningful output for variable 
+
+
+y <- as.numeric(datain2$readmitted)
+x=as.matrix(dataUseglm2[,-c(ncol(dataUseglm2))])
+
+#save the prediction output 
+#also code for plotting AUC curve 
+#try gaussian, if not long, then use multinom  2
+
+cv.lasso <- cv.glmnet(x, y, alpha = 1, family = "multinomial")
+plot(cv.lasso)
+Accuracy = rep(0,10)
+for (i in 1:10) {
+alpha=0.7
+d = sort(sample(nrow(dataUseglm2), nrow(dataUseglm2)*alpha))
+
+Xtrain = as.matrix(dataUseglm2[d,-ncol(dataUseglm2)])
+Xtest = as.matrix(dataUseglm2[-d,-ncol(dataUseglm2)])
+Ytrain = as.numeric(datain2$readmitted)[d]
+Ytest = as.numeric(datain2$readmitted)[-d]
+
+model <- glmnet(x, y, alpha = 1, family = "multinomial",
+                lambda = cv.lasso$lambda.min)
+#test if can get prediction 1 works
+
+predictedclass <- model %>% predict(newx = Xtest,typ="class")
+Accuracy[i]= mean(as.numeric(predictedclass) == Ytest)
+
+}
+
+
+save(dataUseglm2,file="dataUseGLM2.RData")
+save(datain,file="datain.RData")
+save(dataUseglm,file="dataUseGLM.RData")
+#output best subsets 
+```
+simpler way to do cross validation 
+```{r}
+#with chosen alpha, now do 
+```
