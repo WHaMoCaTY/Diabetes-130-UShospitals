@@ -196,6 +196,7 @@ Comparison between models for performance on Diabete's readmission rates:
 | decision tree         |    0.701    |
 | **random forest**     |  **0.730**  |
 
-As we learned in class, ensembles can be very powerful because they’re less prone to overfitting and can generalize better. Our results support this.
+As we learned in class, ensembles can be very powerful because they’re less prone to overfitting and can generalize better. Our results support this. 
+Also, the model's successful performance is dependent on the feature inpatient, which is the number of inpatient visits of the patient in the year preceding the encounter. This feature has been indicated important in both logistic regression and decision trees. 
 
 
