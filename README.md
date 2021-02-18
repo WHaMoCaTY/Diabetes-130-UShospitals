@@ -71,7 +71,7 @@ Out final cleaned dataset:
 ## PCA
 In an attempt to reduce the number of features further, we performed a principal components analysis (PCA) but this did not prove too informative. The first principal component only accounted for 5.5% of the data. Therefore we decided to keep the rest of our features. Figure 1 shows how much each feature explains the data set. The features making the most contributions are indicator variables that say whether or not diabetes medication was prescribed to the patient and whether or not there was a change in dosage for prescribed medication. These features together accounted for 10% of the data. Whether diabetes medication was prescribed and whether there was a change are highly correlated. We suspect this may be because if a patient’s condition is worsening, then a new medication may be prescribed or a higher dosage given and thus there will be a change in dosage. Alternatively, if a patient’s condition is improving, their dosage may be decreased and this is still a change. If someone is not prescribed medicine at all, then there will be no change to administer.
 
-![PCA Plots](PCA_Variable.jpeg)
+![PCA Plots](plots/PCA_Variable.jpeg)
 
 ## Logistic Regression
 We performed some additional preprocessing of the data, namely one-hot encoding the categorical values and shuffling the data.
