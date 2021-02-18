@@ -1,4 +1,4 @@
-## Predicting Diabetes Readmission Rates with Neural Networks, Random Forests, and Lasso.
+## Predicting Diabetes Readmission Rates with Neural Networks, Random Forests, and Logistic Regression.
 Team WHaMoCaTY \* - Priyam Das+, Jinwei Xing+, and Xiaojue Zhou+
 \* Our team name is an abbreviation of ’We Have More Candy Than You’
 \+ these authors contributed equally to this work
