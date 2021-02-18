@@ -74,6 +74,7 @@ Out final cleaned dataset:
 In an attempt to reduce the number of features further, we performed a principal components analysis (PCA) but this did not prove too informative. The first principal component only accounted for 5.5% of the data. Therefore we decided to keep the rest of our features. Figure 1 shows how much each feature explains the data set. The features making the most contributions are indicator variables that say whether or not diabetes medication was prescribed to the patient and whether or not there was a change in dosage for prescribed medication. These features together accounted for 10% of the data. Whether diabetes medication was prescribed and whether there was a change are highly correlated. We suspect this may be because if a patient’s condition is worsening, then a new medication may be prescribed or a higher dosage given and thus there will be a change in dosage. Alternatively, if a patient’s condition is improving, their dosage may be decreased and this is still a change. If someone is not prescribed medicine at all, then there will be no change to administer.
 
 ![PCA Plots](plots/PCA_Variable.jpeg)
+
 Figure 1. Principal components of the data and how much each accounted for the data.
 
 ### Logistic Regression
@@ -93,6 +94,7 @@ The most important factors were:
 - manner in which the patient was discharged (β = 0.824).
 
 ![](Linear&#32;Regression&#32;and&#32;Neural&#32;Nets/LR_class2.jpg)
+
 Figure 2. The 5 most important factors for the <30 classifier. Red means negative values while green means positive.
 
 **>30 class (readmitted after 30 days)**
@@ -104,6 +106,7 @@ The most important factors were:
 -  and the number of diagnoses(β = 1.285).
 
 ![](Linear&#32;Regression&#32;and&#32;Neural&#32;Nets/LR_class3.jpg)
+
 Figure 3. The 5 most important factors for the >30 classifier. Red means negative values while green means positive.
 
 **No Readmission class**
@@ -115,6 +118,7 @@ The most important factors were
 - whether a patient was prescribed miglitol (β = −0.792).
 
 ![](Linear&#32;Regression&#32;and&#32;Neural&#32;Nets/LR_class2.jpg)
+
 Figure 4. The 5 most important factors for the no readmission classifier. Red means negative values while green means positive.
 
 It makes sense that the values for no record of readmission and readmission after 30 days have values on opposite ends of the scales. The features themselves make sense too, as you’re more likely to need a second visit if you’ve already been visiting the hospital enough in the previous year and have several diagnoses.
@@ -141,9 +145,11 @@ have been redundant, however when we look at plots of the loss and accuracy, we 
 faster.
 
 ![](Linear&#32;Regression&#32;and&#32;Neural&#32;Nets/loss.jpg)
+
 Figure 5. Performance of both networks. The loss over 20 epochs of training. 
 
-![](Linear&#32;Regression&#32;and Neural&#32;Nets/acc.jpg)
+![](Linear&#32;Regression&#32;and&#32;Neural&#32;Nets/acc.jpg)
+
 Figure 6 Performance of both networks. The accuracy on the held out test set of data.
 
 ### Decision Trees (Scikit-learn)
@@ -173,6 +179,7 @@ Since we know that decision trees are prone to overfitting, we used scikit learn
 We found that whether we used 100 or 1000 trees, the accuracy of 0.730 did not change. However, the accuracy drastically changes whether each class is given the same weight or is given a weight inversely proportional to its frequency. If the weights are not equal, accuracy tanks to 0.384 which makes sense because the number of no readmissions is almost twice that of the next frequent class, readmissions after 30 days.
 
 ![](plots/feat_imp.jpg)
+
 Figure 7. The 5 most important factors for splits made in trees of the random forest.
 
 ## Conclusion
