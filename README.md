@@ -92,7 +92,7 @@ The most important factors were:
 - no diabetic medicine prescribed (β = −0.865)
 - manner in which the patient was discharged (β = 0.824).
 
-![](Linear Regression and Neural Nets/LR_class2.jpg)
+![](Linear&#32;Regression&#32;and&#32;Neural&#32;Nets/LR_class2.jpg)
 Figure 2. The 5 most important factors for the <30 classifier. Red means negative values while green means positive.
 
 **>30 class (readmitted after 30 days)**
@@ -103,7 +103,7 @@ The most important factors were:
 - the prescription of miglitol (β = 1.606)
 -  and the number of diagnoses(β = 1.285).
 
-![](Linear Regression and Neural Nets/LR_class3.jpg)
+![](Linear&#32;Regression&#32;and&#32;Neural&#32;Nets/LR_class3.jpg)
 Figure 3. The 5 most important factors for the >30 classifier. Red means negative values while green means positive.
 
 **No Readmission class**
@@ -114,7 +114,7 @@ The most important factors were
 - the number of diagnoses (β = −1.820)
 - whether a patient was prescribed miglitol (β = −0.792).
 
-![](Linear Regression and Neural Nets/LR_class2.jpg)
+![](Linear&#32;Regression&#32;and&#32;Neural&#32;Nets/LR_class2.jpg)
 Figure 4. The 5 most important factors for the no readmission classifier. Red means negative values while green means positive.
 
 It makes sense that the values for no record of readmission and readmission after 30 days have values on opposite ends of the scales. The features themselves make sense too, as you’re more likely to need a second visit if you’ve already been visiting the hospital enough in the previous year and have several diagnoses.
@@ -140,10 +140,10 @@ Both models achieved exactly the **same accuracy of 0.601** which was surprising
 have been redundant, however when we look at plots of the loss and accuracy, we see that the two layer network converges
 faster.
 
-![](Linear Regression and Neural Nets/loss.jpg)
+![](Linear&#32;Regression&#32;and&#32;Neural&#32;Nets/loss.jpg)
 Figure 5. Performance of both networks. The loss over 20 epochs of training. 
 
-![](Linear Regression and Neural Nets/acc.jpg)
+![](Linear&#32;Regression&#32;and Neural&#32;Nets/acc.jpg)
 Figure 6 Performance of both networks. The accuracy on the held out test set of data.
 
 ### Decision Trees (Scikit-learn)
@@ -185,7 +185,7 @@ Comparison between models for performance on Diabete's readmission rates:
 | Neural Network        |    0.601    |
 | logistic regression   |    0.609    |
 | decision tree         |    0.701    |
-| **random forest**     |    0.730    |
+| **random forest**     |  **0.730**  |
 
 As we learned in class, ensembles can be very powerful because they’re less prone to overfitting and can generalize better. Our results support this.
 
