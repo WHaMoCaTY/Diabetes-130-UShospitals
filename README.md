@@ -5,7 +5,6 @@ Team WHaMoCaTY \* - Priyam Das+, Jinwei Xing+, and Xiaojue Zhou+
 
 \+ these authors contributed equally to this work
 
-This Markdown File was adapted from pdf reports and adapted to website format by Xiaojue Zhou. 
 
 ## Purpose
 Our group chose to work with the Diabetes 130-US Hospitals dataset for this project. This dataset contains 10 years of patient diabetes records collected from 130 hospitals in the US. 
